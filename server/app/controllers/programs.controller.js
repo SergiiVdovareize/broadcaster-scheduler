@@ -35,26 +35,12 @@ exports.create = async ({ body }, res) => {
         })
     }
 
-    const overlap = await Program.find({
-        $or: [{
-            endDate: {$gt: body.startDate},
-            startDate: {$lt: body.endDate}
-        }, {
-            startDate: {$lt: body.endDate},
-            endDate: {$gt: body.startDate}
-        }]
-    })
-
-    if (overlap && overlap.length > 0) {
+    if (hasTimeOverlap(body)) {
         return res.status(400).send({
             message: "There is some time overlap. Check the existing schedule and try again"
         })
     }
-
-    // console.log('crossing')
-    // console.log(crossing == null)
-    // console.log(crossing)
-
+    
     const duration = Math.ceil(diffTime / 1000) // seconds
 
     try {
@@ -95,4 +81,18 @@ exports.delete = async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
+}
+
+const hasTimeOverlap = async ({ startDate, endDate }) => {
+    const overlap = await Program.find({
+        $or: [{
+            endDate: {$gt: startDate},
+            startDate: {$lt: endDate}
+        }, {
+            startDate: {$lt: endDate},
+            endDate: {$gt: startDate}
+        }]
+    })
+
+    return (overlap && overlap.length > 0)
 }
