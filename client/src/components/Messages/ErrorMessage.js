@@ -1,14 +1,12 @@
 import React from 'react'
-import { Message } from 'semantic-ui-react'
+import MainMessage from './MainMessage'
 
 const ErrorMessage = ({ message }) => (
-    <Message
-        error
-        visible={!!message}
+    <MainMessage
+        messageType='error'
+        message={message}
         header='Error'
-        content={message}
     />
 )
-
 
 export default ErrorMessage

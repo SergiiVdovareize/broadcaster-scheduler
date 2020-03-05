@@ -30,7 +30,7 @@ const doFetch = async (method, controller, data) => {
     const response = await fetch(`${process.env.REACT_APP_SERVER_URI}/${controller}`, params)
     const json = await response.json()
 
-    if (response.status !== 200) {
+    if (response.status >= 300) {
         if (response.status === 401) {
             TokenManager.reset()
         }

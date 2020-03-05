@@ -28,7 +28,7 @@ const ProgramList = () => {
                     <Table.HeaderCell>categories</Table.HeaderCell>
                     <Table.HeaderCell>starts</Table.HeaderCell>
                     <Table.HeaderCell>ends</Table.HeaderCell>
-                    <Table.HeaderCell>duration</Table.HeaderCell>
+                    <Table.HeaderCell>duration (min)</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
 

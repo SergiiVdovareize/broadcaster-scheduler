@@ -24,9 +24,17 @@ exports.index = async ({query: {sort, asc, limit = 10, page = 1}}, res) => {
 exports.create = async ({ body }, res) => {
     if (!body.title || !body.startDate || !body.endDate) {
         return res.status(400).send({
-            message: "Check the data and try again"
+            message: "Fill all the required fields"
         })
     }
+
+    const diffTime = (new Date(body.endDate)) - (new Date(body.startDate))
+    if (diffTime < 0) {
+        return res.status(400).send({
+            message: "Start date must be earlier the end date"
+        })
+    }
+    const duration = Math.ceil(diffTime / 1000) // seconds
 
     try {
         const program = new Program({
@@ -34,7 +42,7 @@ exports.create = async ({ body }, res) => {
             description: body.description,
             startDate: body.startDate,
             endDate: body.endDate,
-            duration: 120,
+            duration,
             categories: body.categories
         })
     

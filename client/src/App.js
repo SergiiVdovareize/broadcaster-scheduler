@@ -26,7 +26,7 @@ function App() {
                 <div>
                     <Switch>
                         <Route exact path="/">
-                            {loggedIn ? <Redirect to="/schedule" /> : <Redirect to="/signin" /> }
+                            {loggedIn ? <Redirect to="/programs" /> : <Redirect to="/signin" /> }
                         </Route>
                         
                         <Route exact path="/signin">
