@@ -15,6 +15,7 @@ const NewProgram = () => {
     const addProgram = async (event) => {
         event.preventDefault()
         setErrorMessage(null)
+        setSuccessMessage(null)
         
         try {
             const form = event.target

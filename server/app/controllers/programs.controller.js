@@ -1,6 +1,6 @@
 const Program = require('../models/program.model')
 
-exports.index = async ({query: {sort, asc, limit = 10, page = 1}}, res) => {
+exports.index = async ({query: {sort, asc, limit = 1000, page = 1}}, res) => {
     const sortField = sort || 'startDate'
     limit = parseInt(limit, 10)
     page = parseInt(page, 10)
@@ -34,6 +34,27 @@ exports.create = async ({ body }, res) => {
             message: "Start date must be earlier the end date"
         })
     }
+
+    const overlap = await Program.find({
+        $or: [{
+            endDate: {$gt: body.startDate},
+            startDate: {$lt: body.endDate}
+        }, {
+            startDate: {$lt: body.endDate},
+            endDate: {$gt: body.startDate}
+        }]
+    })
+
+    if (overlap && overlap.length > 0) {
+        return res.status(400).send({
+            message: "There is some time overlap. Check the existing schedule and try again"
+        })
+    }
+
+    // console.log('crossing')
+    // console.log(crossing == null)
+    // console.log(crossing)
+
     const duration = Math.ceil(diffTime / 1000) // seconds
 
     try {

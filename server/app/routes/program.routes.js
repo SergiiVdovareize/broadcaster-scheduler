@@ -5,6 +5,6 @@ module.exports = (app) => {
     
     app.post('/programs', auth, programs.create)
     app.get('/programs', programs.index)
-    // app.put('/programs/:id', [auth, getProgram], programs.update)
-    // app.delete('/programs/:id', [auth, getProgram], programs.delete)
+    app.put('/programs/:id', [auth, getProgram], programs.update)
+    app.delete('/programs/:id', [auth, getProgram], programs.delete)
 }
