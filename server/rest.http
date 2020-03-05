@@ -1,0 +1,21 @@
+GET http://localhost:5000/signin
+
+###
+
+POST http://localhost:5000/signin
+content-type: application/json
+
+{
+    "email": "bob@mail.com--",
+    "password": "bob"
+}
+
+###
+
+POST http://localhost:5000/signup
+content-type: application/json
+
+{
+    "email": "bob@mail.com",
+    "password": "bob"
+}
