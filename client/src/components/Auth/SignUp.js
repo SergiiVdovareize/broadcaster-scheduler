@@ -41,7 +41,7 @@ const SignUp = ({ setAuthStatus }) => {
 
         <ErrorMessage message={errorMessage}/>
 
-        <Button type='submit' color='blue'>SignUp</Button>
+        <Button type='submit' color='green'>SignUp</Button>
 
         <p>
             <a href='/signin'>Go to Authorization</a>
