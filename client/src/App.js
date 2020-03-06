@@ -18,10 +18,6 @@ import {
 const App = () => {
     const [loggedIn, setLoggedIn] = useState(!!TokenManager.get())
 
-    const setAuthStatus = (status) => {
-        setLoggedIn(status)
-    }
-
     return (
         <Segment padded>
             <SemanticToastContainer />
@@ -33,23 +29,23 @@ const App = () => {
                     </Route>
                     
                     <Route exact path="/signin">
-                        {loggedIn ? <Redirect to="/programs" /> : <SignIn setAuthStatus={setAuthStatus}/> }
+                        {loggedIn ? <Redirect to="/programs" /> : <SignIn setAuthStatus={setLoggedIn}/> }
                     </Route>
 
                     <Route exact path="/signup">
-                        {loggedIn ? <Redirect to="/programs" /> : <SignUp setAuthStatus={setAuthStatus}/>}
+                        {loggedIn ? <Redirect to="/programs" /> : <SignUp setAuthStatus={setLoggedIn}/>}
                     </Route>
 
                     <Route exact path="/programs">
-                        {loggedIn ? <ProgramList setAuthStatus={setAuthStatus}/> : <Redirect to="/signin" /> }
+                        {loggedIn ? <ProgramList setAuthStatus={setLoggedIn}/> : <Redirect to="/signin" /> }
                     </Route>
 
                     <Route exact path="/programs/add">
-                        {loggedIn ? <NewProgram setAuthStatus={setAuthStatus}/> : <Redirect to="/signin" /> }
+                        {loggedIn ? <NewProgram setAuthStatus={setLoggedIn}/> : <Redirect to="/signin" /> }
                     </Route>
 
                     <Route exact path="/programs/edit/:id">
-                        {loggedIn ? <EditProgram setAuthStatus={setAuthStatus}/> : <Redirect to="/signin" /> }
+                        {loggedIn ? <EditProgram setAuthStatus={setLoggedIn}/> : <Redirect to="/signin" /> }
                     </Route>
                 </Switch>
             </Router>
