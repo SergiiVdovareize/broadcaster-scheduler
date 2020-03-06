@@ -1,4 +1,4 @@
-#  Broadcast Scheduler server and client
+#  Broadcast Scheduler - server and client
 
 ## Server
 1. go to `server` directory
@@ -19,3 +19,12 @@
     - REACT_APP_SERVER_URI=`{link_to_the_server_url_and_port}`
     - REACT_APP_TOKEN_KEY=`{token_key_to_store_it_in_local_storage}`
 5. run `npm run start`
+
+## Live server
+Not provided in free version
+
+## Docker containers
+Not provided in free version
+
+## Test coverage
+Free version is not covered with tests
