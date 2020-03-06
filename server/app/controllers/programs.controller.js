@@ -123,7 +123,6 @@ const hasTimeOverlap = async ({ startDate, endDate }, excludeId = null) => {
             _id: { $ne: excludeId}
         }]
     })
-    // add AND by id
 
     return overlap && overlap.length > 0
 }
