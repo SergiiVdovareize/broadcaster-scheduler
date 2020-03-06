@@ -22,26 +22,12 @@ exports.index = async ({query: {sort, asc, limit = 1000, page = 1}}, res) => {
 }
 
 exports.create = async ({ body }, res) => {
-    if (!body.title || !body.startDate || !body.endDate) {
-        return res.status(400).send({
-            message: "Fill all the required fields"
-        })
-    }
-
-    const diffTime = (new Date(body.endDate)) - (new Date(body.startDate))
-    if (diffTime < 0) {
-        return res.status(400).send({
-            message: "Start date must be earlier the end date"
-        })
-    }
-
-    if (hasTimeOverlap(body)) {
-        return res.status(400).send({
-            message: "There is some time overlap. Check the existing schedule and try again"
-        })
+    const isValid = await validateProgram(body, res)
+    if (!isValid) {
+        return
     }
     
-    const duration = Math.ceil(diffTime / 1000) // seconds
+    const diffTime = (new Date(body.endDate)) - (new Date(body.startDate))
 
     try {
         const program = new Program({
@@ -49,8 +35,8 @@ exports.create = async ({ body }, res) => {
             description: body.description,
             startDate: body.startDate,
             endDate: body.endDate,
-            duration,
-            categories: body.categories
+            duration: Math.ceil(diffTime / 1000),
+            categories: body.categories.split(',')
         })
     
         const newProgram = await program.save()
@@ -60,15 +46,30 @@ exports.create = async ({ body }, res) => {
     }
 }
 
+exports.show = async (req, res ) => {
+    res.json(res.program)
+}
+
 exports.update = async ({ body }, res ) => {
-    const task = res.task
-    task.title = body.title
-    task.description = body.description
-    task.dueDate = body.dueDate
+    const program = res.program
+
+    const isValid = await validateProgram(body, res, program._id)
+    if (!isValid) {
+        return
+    }
+
+    program.title = body.title
+    program.description = body.description
+    program.startDate = body.startDate
+    program.endDate = body.endDate
+    program.categories = body.categories.split(',')
+    
+    const diffTime = (new Date(body.endDate)) - (new Date(body.startDate))
+    program.duration = Math.ceil(diffTime / 1000) // seconds
     
     try {
-        const updatedTask = await task.save()
-        res.json(updatedTask)
+        const updatedProgram = await program.save()
+        res.json(updatedProgram)
     } catch (err) {
         res.status(400).json({ message: err.message })
     }
@@ -76,23 +77,53 @@ exports.update = async ({ body }, res ) => {
 
 exports.delete = async (req, res) => {
     try {
-        await res.task.remove()
-        res.json({ message: 'Task deleted' })
+        await res.program.remove()
+        res.json({ message: 'Program deleted' })
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
 }
 
-const hasTimeOverlap = async ({ startDate, endDate }) => {
+const validateProgram = async (body, res, excludeId) => {
+    if (!body.title || !body.startDate || !body.endDate) {
+        res.status(400).send({
+            message: "Fill all the required fields"
+        })
+        return false
+    }
+
+    if ((new Date(body.endDate)) <= (new Date(body.startDate))) {
+        res.status(400).send({
+            message: "Start date must be earlier the end date"
+        })
+        return false
+    }
+
+    if (await hasTimeOverlap(body, excludeId)) {
+        res.status(400).send({
+            message: "There is some time overlap. Check the existing schedule and try again"
+        })
+        return false
+    }
+
+    return true
+}
+
+const hasTimeOverlap = async ({ startDate, endDate }, excludeId = null) => {
     const overlap = await Program.find({
-        $or: [{
-            endDate: {$gt: startDate},
-            startDate: {$lt: endDate}
+        $and: [{
+            $or: [{
+                endDate: {$gt: startDate},
+                startDate: {$lt: endDate}
+            }, {
+                startDate: {$lt: endDate},
+                endDate: {$gt: startDate}
+            }]
         }, {
-            startDate: {$lt: endDate},
-            endDate: {$gt: startDate}
+            _id: { $ne: excludeId}
         }]
     })
+    // add AND by id
 
-    return (overlap && overlap.length > 0)
+    return overlap && overlap.length > 0
 }

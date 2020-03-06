@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Fetcher from '../../helpers/Fetcher'
 import ProgramItem from './ProgramItem'
 import { Table, Button } from 'semantic-ui-react'
+import Toaster from '../../helpers/Toaster'
 
 const ProgramList = () => {
     const [schedule, setSchedule] = useState([])
@@ -26,8 +27,10 @@ const ProgramList = () => {
                 return item._id !== programId
             })
             setSchedule(list)
+
+            Toaster.success('Program successfully removed')
         } catch (error) {
-            console.log('some error during the program removing')
+            Toaster.error(error.message || 'some error during the program removing')
         }
     }
 

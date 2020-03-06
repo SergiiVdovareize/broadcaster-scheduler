@@ -1,8 +1,11 @@
 import React from 'react'
+import { SemanticToastContainer } from 'react-semantic-toasts'
 import { Segment } from 'semantic-ui-react'
 import ProgramList from './components/Schedule/ProgramList'
 import SignUp from './components/Auth/SignUp'
 import SignIn from './components/Auth/SignIn'
+import NewProgram from './components/Schedule/NewProgram'
+import EditProgram from './components/Schedule/EditProgram'
 
 import {
     BrowserRouter as Router,
@@ -10,7 +13,6 @@ import {
     Route,
     Redirect
   } from "react-router-dom";
-import NewProgram from './components/Schedule/NewProgram'
 
 function App() {
     const token = localStorage.getItem(process.env.REACT_APP_TOKEN_KEY)
@@ -22,6 +24,7 @@ function App() {
                 <h1>Broadcast scheduler</h1>
             </div> */}
 
+            <SemanticToastContainer />
             <Router>
                 <div>
                     <Switch>
@@ -43,6 +46,10 @@ function App() {
 
                         <Route exact path="/programs/add">
                             {loggedIn ? <NewProgram /> : <Redirect to="/signin" /> }
+                        </Route>
+
+                        <Route exact path="/programs/edit/:id">
+                            {loggedIn ? <EditProgram /> : <Redirect to="/signin" /> }
                         </Route>
                     </Switch>
                 </div>

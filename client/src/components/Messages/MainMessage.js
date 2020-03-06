@@ -3,6 +3,8 @@ import { Message } from 'semantic-ui-react'
 
 const MainMessage = ({ message, messageType, header }) => (
     <Message
+        floating
+        compact
         error={messageType === 'error'}
         success={messageType === 'success'}
         visible={!!message}

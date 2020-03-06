@@ -1,45 +1,61 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Form, Header, Button } from 'semantic-ui-react'
 import DatePicker from "react-datepicker"
 import ErrorMessage from '../Messages/ErrorMessage'
 import SuccessMessage from '../Messages/SuccessMessage'
 import Fetcher from '../../helpers/Fetcher'
 import "react-datepicker/dist/react-datepicker.css"
+import { useParams } from 'react-router-dom'
 
-const NewProgram = () => {
+const EditProgram = (data) => {
+    const { id: programId } = useParams()
+
     const [errorMessage, setErrorMessage] = useState(null)
     const [successMessage, setSuccessMessage] = useState(null)
+    const [program, setProgram] = useState({categories: []})
+
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
 
-    const addProgram = async (event) => {
+    const fetchProgram = async () => {
+        try {
+            const item = await Fetcher.get(`programs/${programId}`)
+            setProgram(item)
+            setStartDate(new Date(item.startDate))
+            setEndDate(new Date(item.endDate))
+        } catch (error) {
+            setErrorMessage(error.message || 'Some error getting the program')
+        }
+    }
+
+    const saveProgram = async (event) => {
         event.preventDefault()
         setErrorMessage(null)
         setSuccessMessage(null)
 
         try {
             const form = event.target
-            await Fetcher.post('programs', new FormData(form))
-            setSuccessMessage('Program successfully created')
-            
-            setStartDate('')
-            setEndDate('')
-            form.reset()
+            await Fetcher.put(`programs/${programId}`, new FormData(form))
+            setSuccessMessage('Program successfully saved')
         } catch (error) {
             setErrorMessage(error.message || 'Some error')
         }
     }
 
+    useEffect(() => {
+        fetchProgram()
+    }, [])
+
     return (
-        <Form onSubmit={addProgram}>
-            <Header size='large'>New Program</Header>
+        <Form onSubmit={saveProgram}>
+            <Header size='large'>Edit Program</Header>
 
             <Form.Field>
                 <label>Title</label>
-                <input placeholder='Title' name='title'/>
+                <input placeholder='Title' name='title' defaultValue={program.title}/>
             </Form.Field>
             
-            <Form.TextArea label='Description' placeholder='Description' name='description' />
+            <Form.TextArea label='Description' placeholder='Description' name='description' defaultValue={program.description}/>
 
             <Form.Group>
                 <Form.Field>
@@ -75,13 +91,13 @@ const NewProgram = () => {
 
             <Form.Field>
                 <label>Categories</label>
-                <input placeholder='Categories' name='categories'/>
+                <input placeholder='Categories' name='categories' defaultValue={program.categories.join(', ')}/>
             </Form.Field>
 
             <ErrorMessage message={errorMessage}/>
             <SuccessMessage message={successMessage}/>
 
-            <Button type='submit'>Add Program</Button>
+            <Button type='submit'>Save</Button>
             
             <p>
                 <a href='/programs'>Back to the list</a>
@@ -91,4 +107,4 @@ const NewProgram = () => {
 }
     
 
-export default NewProgram
+export default EditProgram

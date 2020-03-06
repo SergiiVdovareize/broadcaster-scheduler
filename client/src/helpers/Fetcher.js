@@ -8,6 +8,10 @@ const post = (controller, data) => {
     return doFetch('POST', controller, data)
 }
 
+const put = (controller, data) => {
+    return doFetch('PUT', controller, data)
+}
+
 const destroy = (controller) => {
     return doFetch('DELETE', controller)
 }
@@ -42,4 +46,4 @@ const doFetch = async (method, controller, data) => {
     }
 }
 
-export default { get, post, destroy }
+export default { get, post, put, destroy }
