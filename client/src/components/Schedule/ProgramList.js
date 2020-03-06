@@ -3,8 +3,9 @@ import Fetcher from '../../helpers/Fetcher'
 import ProgramItem from './ProgramItem'
 import { Table, Button } from 'semantic-ui-react'
 import Toaster from '../../helpers/Toaster'
+import PageHeader from './PageHeader'
 
-const ProgramList = () => {
+const ProgramList = ({ setAuthStatus }) => {
     const [schedule, setSchedule] = useState([])
 
     const getProgramList = async () => {
@@ -40,6 +41,8 @@ const ProgramList = () => {
 
     return (
         <>
+            <PageHeader title='Program List' setAuthStatus={setAuthStatus}/>
+            
             <Table celled striped>
                 <Table.Header>
                     <Table.Row>
@@ -61,7 +64,7 @@ const ProgramList = () => {
                 </Table.Body>
             </Table>
 
-            <Button as='a' href='/programs/add'>Add program</Button>
+            <Button as='a' href='/programs/add' color='blue'>Add program</Button>
         </>
     )
 }

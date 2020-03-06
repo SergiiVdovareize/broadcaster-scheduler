@@ -2,12 +2,11 @@ import React, { useState } from 'react'
 import { Button, Form, Header } from 'semantic-ui-react'
 import Fetcher from '../../helpers/Fetcher'
 import ErrorMessage from '../Messages/ErrorMessage'
-import { useHistory } from 'react-router-dom'
 import TokenManager from '../../helpers/TokenManager'
+import Toaster from '../../helpers/Toaster'
 
-const SignIn = () => {
+const SignIn = ({ setAuthStatus }) => {
     const [errorMessage, setErrorMessage] = useState(null)
-    let history = useHistory()
 
     const login = async (event) => {
         event.preventDefault()
@@ -17,7 +16,8 @@ const SignIn = () => {
             const response = await Fetcher.post('signin', new FormData(event.target))
             if (response.token) {
                 TokenManager.set(response.token)
-                history.push('/programs')
+                Toaster.success('You successfully logged in')
+                setAuthStatus(true)
             }
         } catch (error) {
             setErrorMessage(error.message || 'Some error')
@@ -31,6 +31,7 @@ const SignIn = () => {
             <label>Email</label>
             <input placeholder='Email' name='email'/>
         </Form.Field>
+
         <Form.Field>
             <label>Password</label>
             <input type='password' name='password'/>
@@ -38,7 +39,7 @@ const SignIn = () => {
 
         <ErrorMessage message={errorMessage}/>
 
-        <Button type='submit'>Login</Button>
+        <Button type='submit' color='green'>Login</Button>
         
         <p>
             <a href='/signup'>Go to Registration</a>

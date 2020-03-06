@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { Form, Header, Button } from 'semantic-ui-react'
+import { Form, Button } from 'semantic-ui-react'
 import DatePicker from "react-datepicker"
 import ErrorMessage from '../Messages/ErrorMessage'
 import SuccessMessage from '../Messages/SuccessMessage'
 import Fetcher from '../../helpers/Fetcher'
 import "react-datepicker/dist/react-datepicker.css"
+import PageHeader from './PageHeader'
 
-const NewProgram = () => {
+const NewProgram = ({ setAuthStatus }) => {
     const [errorMessage, setErrorMessage] = useState(null)
     const [successMessage, setSuccessMessage] = useState(null)
     const [startDate, setStartDate] = useState('')
@@ -32,7 +33,7 @@ const NewProgram = () => {
 
     return (
         <Form onSubmit={addProgram}>
-            <Header size='large'>New Program</Header>
+            <PageHeader title='New Program' setAuthStatus={setAuthStatus}/>
 
             <Form.Field>
                 <label>Title</label>
@@ -81,7 +82,7 @@ const NewProgram = () => {
             <ErrorMessage message={errorMessage}/>
             <SuccessMessage message={successMessage}/>
 
-            <Button type='submit'>Add Program</Button>
+            <Button type='submit' color='blue'>Add Program</Button>
             
             <p>
                 <a href='/programs'>Back to the list</a>

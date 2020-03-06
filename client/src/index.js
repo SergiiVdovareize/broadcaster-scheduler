@@ -1,18 +1,11 @@
 import * as serviceWorker from './serviceWorker'
 import 'semantic-ui-css/semantic.min.css'
 import 'react-semantic-toasts/styles/react-semantic-alert.css'
-import './index.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-// import { Provider } from 'react-redux'
-// import { createStore, applyMiddleware } from 'redux';
-// import thunkMiddleware from 'redux-thunk'
-// import rootReducer from './reducers'
-// import weatherReducer from './reducers/weatherReducer'
 
 const rootElement = document.getElementById('root')
-// const store = createStore(rootReducer, applyMiddleware(thunkMiddleware))
 
 ReactDOM.render(<App />, rootElement);
 

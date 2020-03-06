@@ -6,8 +6,9 @@ import SuccessMessage from '../Messages/SuccessMessage'
 import Fetcher from '../../helpers/Fetcher'
 import "react-datepicker/dist/react-datepicker.css"
 import { useParams } from 'react-router-dom'
+import PageHeader from './PageHeader'
 
-const EditProgram = (data) => {
+const EditProgram = ({ setAuthStatus }) => {
     const { id: programId } = useParams()
 
     const [errorMessage, setErrorMessage] = useState(null)
@@ -48,7 +49,7 @@ const EditProgram = (data) => {
 
     return (
         <Form onSubmit={saveProgram}>
-            <Header size='large'>Edit Program</Header>
+            <PageHeader title='Edit Program' setAuthStatus={setAuthStatus}/>
 
             <Form.Field>
                 <label>Title</label>
@@ -97,7 +98,7 @@ const EditProgram = (data) => {
             <ErrorMessage message={errorMessage}/>
             <SuccessMessage message={successMessage}/>
 
-            <Button type='submit'>Save</Button>
+            <Button type='submit' color='blue'>Save</Button>
             
             <p>
                 <a href='/programs'>Back to the list</a>
